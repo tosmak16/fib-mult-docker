@@ -14,6 +14,6 @@ FROM nginx
 
 COPY ./nginx/default.conf /etc/nginx/conf.d/default.conf
 
-COPY --from=node-base /usr/src/app/build/ /usr/share/nginx/html
+COPY --from=node-base /usr/src/app/build /usr/share/nginx/html
 
 EXPOSE 3000
