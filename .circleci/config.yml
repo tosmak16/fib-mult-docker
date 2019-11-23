@@ -27,10 +27,10 @@ jobs:
       - run:
           name: build images
           command: |
-            docker build -t tosmak16/fib-mult-client ../client
-            docker build -t tosmak16/fib-mult-server ../server
-            docker build -t tosmak16/fib-mult-worker ../worker
-            docker build -t tosmak16/fib-mult-nginx ../nginx
+            docker build -t tosmak16/fib-mult-client ./client
+            docker build -t tosmak16/fib-mult-server ./server
+            docker build -t tosmak16/fib-mult-worker ./worker
+            docker build -t tosmak16/fib-mult-nginx ./nginx
 
       - run:
           name: docker login
