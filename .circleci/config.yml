@@ -14,7 +14,7 @@ jobs:
       - checkout
 
       # build image
-      - run: docker build -t tosmak16/react-test -f ../client/Dockerfile.dev ../client
+      - run: docker build -t tosmak16/react-test -f ./client/Dockerfile.dev ./client
 
       # run tests!
       - run: docker run -e CI=true tosmak16/react-test npm test
