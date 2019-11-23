@@ -1,0 +1,59 @@
+# Javascript Node CircleCI 2.0 configuration file
+#
+# Check https://circleci.com/docs/2.0/language-javascript/ for more details
+#
+version: 2
+jobs:
+  build-and-test:
+  # Triggers deployment to docker-hub
+    machine: true
+
+    working_directory: ~/fib-mult-docker
+
+    steps:
+      - checkout
+
+      # build image
+      - run: docker build -t tosmak16/react-test -f ../client/Dockerfile.dev ../client
+
+      # run tests!
+      - run: docker run -e CI=true tosmak16/react-test npm test
+
+  # Triggers deployment to docker-hub
+  deploy:
+    machine: true
+    steps:
+      - checkout
+      - run:
+          name: build images
+          command: |
+            docker build -t tosmak16/fib-mult-client ../client
+            docker build -t tosmak16/fib-mult-server ../server
+            docker build -t tosmak16/fib-mult-worker ../worker
+            docker build -t tosmak16/fib-mult-nginx ../nginx
+
+      - run:
+          name: docker login
+          command: echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_ID" --password-stdin
+
+      - run:
+          name: push to docker hub
+          command: |
+            docker push tosmak16/fib-mult-client
+            docker push tosmak16/fib-mult-server
+            docker push tosmak16/fib-mult-worker
+            docker push tosmak16/fib-mult-nginx
+
+
+workflows:
+  version: 2
+  build:
+    jobs:
+      - build-and-test
+      - deploy:
+          requires:
+            - build-and-test
+          filters:
+            branches:
+              only:
+                - master
